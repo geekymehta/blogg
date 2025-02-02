@@ -1,3 +1,4 @@
 /ai/audio_files/
 /ai/transcripts/
 /ai/output/
+/ai/__pycache__/
