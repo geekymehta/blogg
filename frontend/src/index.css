@@ -5,3 +5,18 @@
 .tiptap {
   @apply p-4;
 }
+
+/* Ensure list styles are visible in the editor */
+.ProseMirror ul {
+  list-style-type: disc; /* Ensure bullet points appear */
+  padding-left: 1.5rem; /* Add some spacing */
+}
+
+.ProseMirror ol {
+  list-style-type: decimal; /* Ensure ordered lists appear */
+  padding-left: 1.5rem;
+}
+
+.ProseMirror li {
+  margin-left: 1rem;
+}
