@@ -1,11 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import { BACKEND_URL } from "../../config";
-import TextEditor from "../TextEditor/TextEditor";
 import { useNavigate } from "react-router-dom";
-import { AiOutlinePlus } from "react-icons/ai";
-
-import styles from "./Publish.module.css";
+import { EditorContent, EditorContext, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Image from "@tiptap/extension-image";
+import Iframe from "../EditorUtils/CustomComponent/Iframe"; // Custom iframe extension
+import Link from "@tiptap/extension-link";
+import Underline from "@tiptap/extension-underline";
+import TextStyle from "@tiptap/extension-text-style";
+import CodeBlock from "../EditorUtils/CustomComponent/CodeBlock";
+import BulletList from "@tiptap/extension-bullet-list";
+import OrderedList from "@tiptap/extension-ordered-list";
+import ListItem from "@tiptap/extension-list-item";
+import ButtonComponent from "./ButtonComponent/ButtonComponent";
+import { BACKEND_URL } from "../../config";
+import Toolbar from "../EditorUtils/Toolbar";
 
 const Publish = () => {
   const [title, setTitle] = useState("");
@@ -15,6 +24,37 @@ const Publish = () => {
     left: number;
   } | null>(null);
   const navigate = useNavigate();
+
+  const editor = useEditor({
+    extensions: [
+      StarterKit.configure({ codeBlock: false }),
+      Image,
+      Iframe,
+      Link,
+      Underline,
+      TextStyle,
+      CodeBlock,
+      BulletList,
+      OrderedList,
+      ListItem,
+    ],
+    content: "<p>Start writing...</p>",
+    onUpdate: updateButtonPosition,
+    onSelectionUpdate: updateButtonPosition,
+  });
+
+  function updateButtonPosition({ editor }: any) {
+    const { state } = editor;
+    const { from } = state.selection;
+
+    const coords = editor.view.coordsAtPos(from);
+    const editorElement = editor.view.dom as HTMLElement;
+
+    setButtonPosition({
+      top: coords.top + editorElement.scrollTop + window.scrollY, // Adjust for scroll
+      left: coords.left,
+    });
+  }
 
   const onSubmit = async () => {
     const response = await axios.post(
@@ -32,16 +72,13 @@ const Publish = () => {
     navigate(`/blog/${response.data.id}`);
   };
 
+  if (!editor) return null;
+
   return (
-    <div className="flex justify-center w-full pt-8 bg-white">
-      <div className="max-w-screen-lg w-full">
+    <EditorContext.Provider value={editor as any}>
+      <div className="flex justify-center pt-8 bg-[#222222] max-w-screen-lg w-full px-8">
         {buttonPosition && (
-          <button
-            className={styles.plus_btn}
-            style={{ top: buttonPosition.top }}
-          >
-            <AiOutlinePlus size={20} />
-          </button>
+          <ButtonComponent position={buttonPosition.top} editor={editor} />
         )}
         <div className="px-[30px]">
           <input
@@ -52,13 +89,14 @@ const Publish = () => {
             className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
             placeholder="Title"
           />
+          <div className="border p-2 rounded">
+            {/* Toolbar */}
+            <Toolbar editor={editor} />
 
-          <TextEditor
-            onChange={(e) => {
-              setDescription(e.target.value);
-            }}
-            setButtonPosition={setButtonPosition}
-          />
+            {/* Editor Content */}
+            <EditorContent editor={editor} />
+          </div>
+
           <button
             onClick={onSubmit}
             type="submit"
@@ -68,7 +106,7 @@ const Publish = () => {
           </button>
         </div>
       </div>
-    </div>
+    </EditorContext.Provider>
   );
 };
 
