@@ -26,7 +26,7 @@ const CodeBlockComponent: React.FC<NodeViewProps> = ({
   };
 
   return (
-    <NodeViewWrapper className="border p-2 rounded bg-gray-900">
+    <NodeViewWrapper className="border border-[#575757] p-2 rounded bg-gray-900">
       <div>
         <select value={language} onChange={(e) => setLanguage(e.target.value)}>
           <option value="javascript">JavaScript</option>
@@ -44,13 +44,13 @@ const CodeBlockComponent: React.FC<NodeViewProps> = ({
 
         <button
           onClick={handleSubmit}
-          className="px-2 py-1 border rounded mt-2 bg-blue-500 text-white"
+          className="px-2 py-1 border border-[#575757] rounded mt-2 bg-blue-500 text-foreground"
         >
           Submit
         </button>
         <button
           onClick={deleteNode}
-          className="px-2 py-1 border rounded mt-2 bg-red-500 text-white ml-2"
+          className="px-2 py-1 border border-[#575757] rounded mt-2 bg-red-500 text-foreground ml-2"
         >
           Delete
         </button>

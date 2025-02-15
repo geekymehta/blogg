@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  @apply text-foreground bg-background;
+}
+
 .tiptap {
   @apply p-4;
 }
@@ -19,4 +23,15 @@
 
 .ProseMirror li {
   margin-left: 1rem;
+}
+
+.ProseMirror:focus {
+  outline: none !important;
+}
+
+.is-empty::before {
+  content: attr(data-placeholder);
+  color: gray;
+  pointer-events: none;
+  position: absolute;
 }

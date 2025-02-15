@@ -36,7 +36,10 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
       >
         Strikethrough
       </button>
-      <button onClick={addCodeBlock} className="px-2 py-1 border rounded">
+      <button
+        onClick={addCodeBlock}
+        className="px-2 py-1 border border-[#575757] rounded"
+      >
         Add Code Block
       </button>
 
@@ -128,6 +131,6 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
 
 // Function to style buttons based on active state
 const buttonStyle = (isActive: boolean) =>
-  `px-2 py-1 border rounded ${isActive ? "bg-gray-300" : ""}`;
+  `px-2 py-1 border border-[#575757] rounded ${isActive ? "bg-gray-300" : ""}`;
 
 export default Toolbar;
